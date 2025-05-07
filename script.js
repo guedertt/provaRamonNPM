@@ -1,7 +1,10 @@
 //importacões
 import fs from 'fs';
 import { v4 } from 'uuid';  
+import express from 'express'
 
+const app = express()
+const porta = 3000
 const path = "logs.txt";
 const novoID = gerarID();
 const dataHoraAtual = new Date();
@@ -22,5 +25,9 @@ function adicionarMensagens() {
         }
     });
 }
+
+app.listen(porta,()=>{
+    console.log(`ouvindo na porta ${porta}`)
+} )
 
 adicionarMensagens();
