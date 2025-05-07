@@ -2,6 +2,7 @@
 import fs from 'fs';
 import { v4 } from 'uuid';  
 import express from 'express';
+import { log } from 'console';
 
 const app = express();
 const porta = 3000;
@@ -53,6 +54,32 @@ app.post('/logs', (req, res) => {
         mensagem: 'Log registrado com sucesso!',
     });
 });
+
+app.get('/logs/:id',(req,res) => {
+    const {id} = req.params
+
+    fs.readFile(path,'utf-8',(err,data)=>{
+        if(err){
+            return res.status(500).json({mensagem : 'erro ao ler o arquivo'})
+        }
+
+        const logs = data.split('\n')
+
+        const logsEncontrado = logs.find(log => log.includes(id))
+
+        if (logsEncontrado){
+            return res.status(200).json({
+                id: id,
+                mensagem: 'Log encontrado',
+                log: logsEncontrado,
+            })
+        }
+        else{
+            res.status(404).json({mensagem: 'Log nao encontrado'})
+        }
+    })
+
+})
 
 // teste para ver se está ouvindo na porta correta
 app.listen(porta, () => {
